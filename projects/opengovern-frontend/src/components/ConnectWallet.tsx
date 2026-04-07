@@ -43,11 +43,13 @@ export function ConnectWallet() {
         {isLocalnet ? 'LOCAL' : 'TESTNET'}
       </span>
 
-      {wallets.map((wallet) => (
-        <button key={wallet.id} onClick={() => wallet.connect()} className="btn-primary-web3 text-xs w-[180px]">
-          Connect {wallet.metadata?.name ?? wallet.id}
-        </button>
-      ))}
+      {wallets
+        .filter((w) => (isLocalnet ? true : w.id?.toLowerCase() !== 'kmd'))
+        .map((wallet) => (
+          <button key={wallet.id} onClick={() => wallet.connect()} className="btn-primary-web3 text-xs w-[180px]">
+            Connect {wallet.metadata?.name ?? wallet.id}
+          </button>
+        ))}
     </div>
   )
 }

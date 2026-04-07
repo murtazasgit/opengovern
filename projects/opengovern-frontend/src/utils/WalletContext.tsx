@@ -3,19 +3,21 @@ import { ReactNode } from 'react'
 
 const isLocalnet = import.meta.env.VITE_NETWORK === 'localnet'
 
-const walletManager = new WalletManager({
-  wallets: [
-    {
-      id: WalletId.KMD,
-      options: {
-        baseServer: import.meta.env.VITE_KMD_SERVER || 'http://localhost',
-        port: import.meta.env.VITE_KMD_PORT || 4002,
-        token: import.meta.env.VITE_KMD_TOKEN || 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        wallet: import.meta.env.VITE_KMD_WALLET || 'unencrypted-default-wallet',
-      },
+const wallets: any[] = [
+  {
+    id: WalletId.KMD,
+    options: {
+      baseServer: import.meta.env.VITE_KMD_SERVER || 'http://localhost',
+      port: import.meta.env.VITE_KMD_PORT || 4002,
+      token: import.meta.env.VITE_KMD_TOKEN || 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      wallet: import.meta.env.VITE_KMD_WALLET || 'unencrypted-default-wallet',
     },
-    WalletId.PERA,
-  ],
+  },
+  WalletId.PERA,
+]
+
+const walletManager = new WalletManager({
+  wallets: isLocalnet ? wallets : [WalletId.PERA],
   defaultNetwork: isLocalnet ? NetworkId.LOCALNET : NetworkId.TESTNET,
   networks: {
     [NetworkId.LOCALNET]: {
