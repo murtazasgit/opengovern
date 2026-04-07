@@ -16,6 +16,10 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Syne', sans-serif;
   }
+  
+  h2, h3 {
+    @apply text-[#22c55e];
+  }
 }
 
 @layer components {
@@ -34,7 +38,7 @@
   }
 
   .btn-primary-web3 {
-    @apply btn-web3 bg-[#f59e0b] text-black hover:bg-[#d97706];
+    @apply btn-web3 bg-[#22c55e] text-white hover:bg-[#16a34a];
   }
   
   .btn-secondary-web3 {
