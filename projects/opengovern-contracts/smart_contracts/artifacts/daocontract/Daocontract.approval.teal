@@ -4,7 +4,7 @@
 // algopy.arc4.ARC4Contract.approval_program() -> uint64:
 main:
     intcblock 0 1 8 2
-    bytecblock "total_members" "membership_type" "proposal_count" "creator" 0x70 "quorum" "threshold" "voting_duration" "minimum_stake" 0x77 "dao_name" 0x0000 "description" "member_since" "staked_amount"
+    bytecblock "total_members" "membership_type" "creator" "proposal_count" 0x70 "quorum" "threshold" "voting_duration" "minimum_stake" 0x77 "dao_name" 0x0000 "description" "member_since" "staked_amount"
     txn ApplicationID
     bnz main_after_if_else@2
     // smart_contracts/daocontract/contract.py:66-67
@@ -40,7 +40,7 @@ main:
     app_global_put
     // smart_contracts/daocontract/contract.py:72
     // self.proposal_count = GlobalState(UInt64(0), key="proposal_count")
-    bytec_2 // "proposal_count"
+    bytec_3 // "proposal_count"
     intc_0 // 0
     app_global_put
     // smart_contracts/daocontract/contract.py:73
@@ -67,11 +67,11 @@ main_after_if_else@2:
     // # Main Contract
     // # ---------------------------------------------------------------------------
     // class Daocontract(ARC4Contract):
-    pushbytess 0xf9b4d7c4 0x3dcfc074 0xef5d4196 // method "opt_in_member()void", method "stake_join(pay)void", method "leave_dao()void"
+    pushbytess 0xf9b4d7c4 0x3dcfc074 0xef5d4196 0xc70379a0 // method "opt_in_member()void", method "stake_join(pay)void", method "leave_dao()void", method "delete_dao()void"
     txna ApplicationArgs 0
-    match main_opt_in_member_route@4 main_stake_join_route@5 main_leave_dao_route@6
+    match main_opt_in_member_route@4 main_stake_join_route@5 main_leave_dao_route@6 main_delete_dao_route@7
 
-main_switch_case_next@7:
+main_switch_case_next@8:
     // smart_contracts/daocontract/contract.py:59-62
     // # ---------------------------------------------------------------------------
     // # Main Contract
@@ -81,13 +81,13 @@ main_switch_case_next@7:
     !
     assert
     txn ApplicationID
-    bz main_create_NoOp@17
+    bz main_create_NoOp@18
     pushbytess 0x20463666 0x9284c4f1 0xeed10d58 0xf5dca605 0xf7f4481f 0xf5910756 0x229b562d // method "fund_treasury(pay)void", method "add_to_whitelist(address)void", method "remove_from_whitelist(address)void", method "create_proposal(string,string,address,uint64)uint64", method "vote(uint64,bool)void", method "finalize_proposal(uint64)void", method "execute_proposal(uint64,uint64)void"
     txna ApplicationArgs 0
     match fund_treasury add_to_whitelist remove_from_whitelist create_proposal vote finalize_proposal execute_proposal
     err
 
-main_create_NoOp@17:
+main_create_NoOp@18:
     // smart_contracts/daocontract/contract.py:59-62
     // # ---------------------------------------------------------------------------
     // # Main Contract
@@ -97,6 +97,20 @@ main_create_NoOp@17:
     txna ApplicationArgs 0
     match create_dao
     err
+
+main_delete_dao_route@7:
+    // smart_contracts/daocontract/contract.py:378-381
+    // # ------------------------------------------------------------------
+    // # 9. delete_dao — creator only
+    // # ------------------------------------------------------------------
+    // @arc4.abimethod(allow_actions=["DeleteApplication"])
+    txn OnCompletion
+    pushint 5 // DeleteApplication
+    ==
+    txn ApplicationID
+    &&
+    assert
+    b delete_dao
 
 main_leave_dao_route@6:
     // smart_contracts/daocontract/contract.py:175-178
@@ -254,7 +268,7 @@ create_dao:
     app_global_put
     // smart_contracts/daocontract/contract.py:121
     // self.proposal_count.value = UInt64(0)
-    bytec_2 // "proposal_count"
+    bytec_3 // "proposal_count"
     intc_0 // 0
     app_global_put
     // smart_contracts/daocontract/contract.py:122
@@ -274,7 +288,7 @@ create_dao:
     app_global_put
     // smart_contracts/daocontract/contract.py:125
     // self.creator.value = Txn.sender.bytes
-    bytec_3 // "creator"
+    bytec_2 // "creator"
     txn Sender
     app_global_put
     // smart_contracts/daocontract/contract.py:96-99
@@ -339,7 +353,7 @@ opt_in_member:
     // is_creator = Txn.sender.bytes == self.creator.value
     txn Sender
     intc_0 // 0
-    bytec_3 // "creator"
+    bytec_2 // "creator"
     app_global_get_ex
     assert // check self.creator exists
     ==
@@ -576,7 +590,7 @@ add_to_whitelist:
     // assert Txn.sender.bytes == self.creator.value, (
     txn Sender
     intc_0 // 0
-    bytec_3 // "creator"
+    bytec_2 // "creator"
     app_global_get_ex
     assert // check self.creator exists
     ==
@@ -627,7 +641,7 @@ remove_from_whitelist:
     // assert Txn.sender.bytes == self.creator.value, (
     txn Sender
     intc_0 // 0
-    bytec_3 // "creator"
+    bytec_2 // "creator"
     app_global_get_ex
     assert // check self.creator exists
     ==
@@ -722,7 +736,7 @@ create_proposal:
     // smart_contracts/daocontract/contract.py:232
     // proposal_id = self.proposal_count.value
     intc_0 // 0
-    bytec_2 // "proposal_count"
+    bytec_3 // "proposal_count"
     app_global_get_ex
     assert // check self.proposal_count exists
     // smart_contracts/daocontract/contract.py:233
@@ -730,7 +744,7 @@ create_proposal:
     dup
     intc_1 // 1
     +
-    bytec_2 // "proposal_count"
+    bytec_3 // "proposal_count"
     swap
     app_global_put
     // smart_contracts/daocontract/contract.py:235
@@ -879,7 +893,7 @@ vote:
     // # Duplicate vote check via vote-dedup BoxMap
     // vote_key = _vote_box_key(proposal_id, Txn.sender)
     txn Sender
-    // smart_contracts/daocontract/contract.py:385
+    // smart_contracts/daocontract/contract.py:403
     // return op.itob(proposal_id) + voter.bytes
     uncover 2
     itob
@@ -1334,5 +1348,68 @@ execute_proposal_after_if_else@3:
     // # 8. execute_proposal — partial or full disbursement
     // # ------------------------------------------------------------------
     // @arc4.abimethod()
+    intc_1 // 1
+    return
+
+
+// smart_contracts.daocontract.contract.Daocontract.delete_dao[routing]() -> void:
+delete_dao:
+    // smart_contracts/daocontract/contract.py:384
+    // assert Txn.sender.bytes == self.creator.value, (
+    txn Sender
+    intc_0 // 0
+    bytec_2 // "creator"
+    app_global_get_ex
+    assert // check self.creator exists
+    ==
+    // smart_contracts/daocontract/contract.py:384-386
+    // assert Txn.sender.bytes == self.creator.value, (
+    //     "Only the creator can delete the DAO"
+    // )
+    assert // Only the creator can delete the DAO
+    // smart_contracts/daocontract/contract.py:388-394
+    // # Send all remaining ALGO back to the creator via close_remainder_to
+    // itxn.Payment(
+    //     receiver=Txn.sender,
+    //     amount=0,
+    //     close_remainder_to=Txn.sender,
+    //     fee=0,
+    // ).submit()
+    itxn_begin
+    // smart_contracts/daocontract/contract.py:390
+    // receiver=Txn.sender,
+    txn Sender
+    // smart_contracts/daocontract/contract.py:392
+    // close_remainder_to=Txn.sender,
+    dup
+    itxn_field CloseRemainderTo
+    // smart_contracts/daocontract/contract.py:391
+    // amount=0,
+    intc_0 // 0
+    itxn_field Amount
+    itxn_field Receiver
+    // smart_contracts/daocontract/contract.py:388-389
+    // # Send all remaining ALGO back to the creator via close_remainder_to
+    // itxn.Payment(
+    intc_1 // pay
+    itxn_field TypeEnum
+    // smart_contracts/daocontract/contract.py:393
+    // fee=0,
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/daocontract/contract.py:388-394
+    // # Send all remaining ALGO back to the creator via close_remainder_to
+    // itxn.Payment(
+    //     receiver=Txn.sender,
+    //     amount=0,
+    //     close_remainder_to=Txn.sender,
+    //     fee=0,
+    // ).submit()
+    itxn_submit
+    // smart_contracts/daocontract/contract.py:378-381
+    // # ------------------------------------------------------------------
+    // # 9. delete_dao — creator only
+    // # ------------------------------------------------------------------
+    // @arc4.abimethod(allow_actions=["DeleteApplication"])
     intc_1 // 1
     return

@@ -375,6 +375,24 @@ class Daocontract(ARC4Contract):
             fee=0,
         ).submit()
 
+    # ------------------------------------------------------------------
+    # 9. delete_dao — creator only
+    # ------------------------------------------------------------------
+    @arc4.abimethod(allow_actions=["DeleteApplication"])
+    def delete_dao(self) -> None:
+        """Fully delete the application and send the remaining ALGO to the creator."""
+        assert Txn.sender.bytes == self.creator.value, (
+            "Only the creator can delete the DAO"
+        )
+
+        # Send all remaining ALGO back to the creator via close_remainder_to
+        itxn.Payment(
+            receiver=Txn.sender,
+            amount=0,
+            close_remainder_to=Txn.sender,
+            fee=0,
+        ).submit()
+
 
 # ---------------------------------------------------------------------------
 # Pure helper — builds the composite box key for vote dedup

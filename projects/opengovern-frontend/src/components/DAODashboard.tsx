@@ -9,6 +9,7 @@ import { txnSuccess, txnError } from '../utils/txnToast'
 import { enableDiscussion, getDiscussionStatuses } from '../utils/discussions'
 import ProposalCard from './ProposalCard'
 import CreateProposalModal from './CreateProposalModal'
+import { removeDAO } from '../utils/daoRegistry'
 
 /** Safely extract txId from algod sendRawTransaction response. */
 function extractTxId(result: unknown): string {
@@ -445,6 +446,35 @@ const DAODashboard: React.FC<DAODashboardProps> = ({ dao }) => {
     }
   }
 
+  const handleDeleteDao = async () => {
+    if (!client || !transactionSigner) return
+    const confirmed = window.confirm(
+      'Are you sure you want to PERMANENTLY DELETE this DAO? This will close the application and return all treasury funds to you.',
+    )
+    if (!confirmed) return
+    setActionPending(true)
+    try {
+      const txns = await client.buildDeleteDao()
+      const signed = await transactionSigner(
+        txns,
+        txns.map((_, i) => i),
+      )
+      const result = await algod.sendRawTransaction(signed).do()
+      const txId = extractTxId(result)
+      if (txId) await algosdk.waitForConfirmation(algod, txId, 4)
+
+      // Remove from local/global registry
+      await removeDAO(Number(dao.appId))
+
+      txnSuccess('DAO deleted and treasury funds reclaimed', txId)
+      window.location.href = '/' // Redirect to home
+    } catch (err) {
+      txnError('Failed to delete DAO', err)
+    } finally {
+      setActionPending(false)
+    }
+  }
+
   // ── Join button renderer ────────────────────────────────────────────────
 
   const renderJoinButton = () => {
@@ -575,6 +605,19 @@ const DAODashboard: React.FC<DAODashboardProps> = ({ dao }) => {
                 >
                   ↻ Refresh
                 </button>
+                {/* Danger Zone */}
+                {isCreator && (
+                  <div className="flex-none sm:border-l-2 sm:border-black/10 sm:pl-3">
+                    <button
+                      onClick={handleDeleteDao}
+                      className="btn-web3 bg-red-600 text-white hover:bg-red-700 text-[10px] px-3 py-2 border-black"
+                      disabled={actionPending}
+                      title="Permanently delete this DAO and reclaim treasury"
+                    >
+                      {actionPending ? '⏳' : '☠️'} Delete DAO
+                    </button>
+                  </div>
+                )}
               </>
             ) : (
               <p className="font-mono text-xs text-black/40 italic uppercase tracking-widest">

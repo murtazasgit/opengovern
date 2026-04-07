@@ -87,6 +87,11 @@ const ABI_METHODS = {
     ],
     returns: { type: 'void' },
   }),
+  deleteDao: new algosdk.ABIMethod({
+    name: 'delete_dao',
+    args: [],
+    returns: { type: 'void' },
+  }),
 }
 
 // ─── Box key prefixes ──────────────────────────────────────────────────────
@@ -428,6 +433,26 @@ export class DaoClient {
       signer: algosdk.makeEmptyTransactionSigner(),
       boxes: [{ appIndex: Number(this.appId), name: proposalBoxKey }],
       appAccounts: [proposal.recipient],
+    })
+
+    return atc.buildGroup().map((t) => t.txn)
+  }
+
+  // ── 7.5. Delete DAO ───────────────────────────────────────────────────────
+
+  async buildDeleteDao(): Promise<algosdk.Transaction[]> {
+    const sp = await this.getSuggestedParams()
+    const atc = new algosdk.AtomicTransactionComposer()
+
+    atc.addMethodCall({
+      appID: Number(this.appId),
+      method: ABI_METHODS.deleteDao,
+      methodArgs: [],
+      sender: this.sender,
+      // Extra fee for inner payment (treasury sweep)
+      suggestedParams: { ...sp, fee: Math.max(Number(sp.minFee), 2000), flatFee: true },
+      onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+      signer: algosdk.makeEmptyTransactionSigner(),
     })
 
     return atc.buildGroup().map((t) => t.txn)
