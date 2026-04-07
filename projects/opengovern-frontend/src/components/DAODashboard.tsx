@@ -614,7 +614,7 @@ const DAODashboard: React.FC<DAODashboardProps> = ({ dao }) => {
                       disabled={actionPending}
                       title="Permanently delete this DAO and reclaim treasury"
                     >
-                      {actionPending ? '⏳' : '☠️'} Delete DAO
+                      {actionPending ? '⏳' : ''} Delete DAO
                     </button>
                   </div>
                 )}

@@ -93,6 +93,24 @@ class Daocontract(ARC4Contract):
         self.member_since = LocalState(UInt64, key="member_since")
         self.staked_amount = LocalState(UInt64, key="staked_amount")
 
+    @arc4.abimethod()
+    def delete_proposal(self, proposal_id: UInt64) -> None:
+        """Allow the creator to delete a proposal box (required before app deletion)."""
+        assert Txn.sender.bytes == self.creator.value, (
+            "Only the creator can delete proposals"
+        )
+        # Clear the proposal box
+        del self.proposals[arc4.UInt64(proposal_id)]
+
+    @arc4.abimethod()
+    def delete_vote_record(self, proposal_id: UInt64, voter: Account) -> None:
+        """Allow the creator to delete a vote record box (required before app deletion)."""
+        assert Txn.sender.bytes == self.creator.value, (
+            "Only the creator can manage vote records"
+        )
+        # Clear the vote box
+        del self.votes[_vote_box_key(proposal_id, voter)]
+
     # ------------------------------------------------------------------
     # 1. create_dao — called once at application creation
     # ------------------------------------------------------------------
