@@ -16,7 +16,7 @@ const NavLink = ({ to, text }: { to: string; text: string }) => {
   return (
     <Link to={to} className="relative group block mb-6">
       <div
-        className={`panel-web3 p-4 uppercase font-bold text-sm tracking-widest text-center transition-all duration-300 ${isActive ? 'bg-[#22c55e] lg:translate-x-4 shadow-none translate-x-1 translate-y-1 text-white' : 'hover:translate-x-2 hover:bg-[#22c55e]/10'}`}
+        className={`panel-web3 p-4 uppercase font-bold text-sm tracking-widest text-center transition-all duration-300 ${isActive ? 'bg-[#fbbf24] lg:translate-x-4 shadow-none translate-x-1 translate-y-1' : 'hover:translate-x-2'}`}
       >
         {text}
       </div>
