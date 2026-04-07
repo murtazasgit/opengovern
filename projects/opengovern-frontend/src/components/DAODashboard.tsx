@@ -521,7 +521,7 @@ const DAODashboard: React.FC<DAODashboardProps> = ({ dao }) => {
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl font-extrabold uppercase tracking-tight text-[#7c3aed]">{dao.name}</h1>
+                <h1 className="text-3xl font-extrabold uppercase tracking-tight">{dao.name}</h1>
                 {/* Template badge */}
                 <span
                   className={`

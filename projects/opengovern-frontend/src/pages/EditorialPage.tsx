@@ -42,7 +42,7 @@ const EditorialPage: React.FC = () => {
       <div className="panel-web3 p-8 md:p-12 bg-white relative overflow-hidden group">
         <div className="absolute top-0 right-12 w-8 h-8 border-b-2 border-l-2 border-black bg-[#8b5cf6] transform -translate-y-1/2 group-hover:bg-[#fbbf24] transition-colors"></div>
 
-        <h2 className="text-4xl md:text-5xl font-extrabold uppercase mb-4 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] text-[#7c3aed]">
+        <h2 className="text-4xl md:text-5xl font-extrabold uppercase mb-4 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
           Editorial
         </h2>
         <div className="w-full h-1 bg-black mb-6 opacity-20"></div>
@@ -69,12 +69,12 @@ const EditorialPage: React.FC = () => {
                   </span>
                   <span className="font-mono text-[10px] uppercase tracking-widest text-black/30">{article.date}</span>
                 </div>
-                <h3 className="text-xl font-bold uppercase tracking-tight mb-2 group-hover:text-[#7c3aed] transition-colors">
+                <h3 className="text-xl font-bold uppercase tracking-tight mb-2 group-hover:text-[#22c55e] transition-colors">
                   {article.title}
                 </h3>
                 <p className="text-sm text-black/60 leading-relaxed">{article.excerpt}</p>
               </div>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-[#7c3aed] font-bold self-end md:self-start shrink-0 group-hover:translate-x-2 transition-transform">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-[#22c55e] font-bold self-end md:self-start shrink-0 group-hover:translate-x-2 transition-transform">
                 Read →
               </span>
             </div>

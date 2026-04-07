@@ -5,9 +5,9 @@ const AboutPage: React.FC = () => {
     <div className="flex flex-col gap-8 max-w-[100vw] overflow-x-hidden p-2">
       {/* Hero */}
       <div className="panel-web3 p-8 md:p-12 bg-white relative overflow-hidden group">
-        <div className="absolute top-0 right-12 w-8 h-8 border-b-2 border-l-2 border-black bg-[#8b5cf6] transform -translate-y-1/2 group-hover:bg-[#fbbf24] transition-colors"></div>
+        <div className="absolute top-0 right-12 w-8 h-8 border-b-2 border-l-2 border-black bg-black transform -translate-y-1/2 group-hover:bg-[#fbbf24] transition-colors"></div>
 
-        <h2 className="text-4xl md:text-5xl font-extrabold uppercase mb-4 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] text-[#7c3aed]">About</h2>
+        <h2 className="text-4xl md:text-5xl font-extrabold uppercase mb-4 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">About</h2>
         <div className="w-full h-1 bg-black mb-6 opacity-20"></div>
 
         <div className="space-y-6 max-w-3xl">

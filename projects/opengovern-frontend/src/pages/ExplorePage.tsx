@@ -8,7 +8,7 @@ const ExplorePage: React.FC = () => {
       <div className="panel-web3 p-8 md:p-12 bg-white relative overflow-hidden group">
         <div className="absolute top-0 right-12 w-8 h-8 border-b-2 border-l-2 border-black bg-[#fbbf24] transform -translate-y-1/2 group-hover:bg-[#8b5cf6] transition-colors"></div>
 
-        <h2 className="text-4xl md:text-5xl font-extrabold uppercase mb-4 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] text-[#7c3aed]">
+        <h2 className="text-4xl md:text-5xl font-extrabold uppercase mb-4 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
           Explore
         </h2>
         <div className="w-full h-1 bg-black mb-6 opacity-20"></div>
@@ -25,7 +25,7 @@ const ExplorePage: React.FC = () => {
               Browse live DAO treasuries deployed on Algorand. Each DAO has its own on-chain governance rules, membership model, and
               treasury balance.
             </p>
-            <Link to="/" className="block mt-4 font-mono text-[10px] uppercase tracking-widest text-[#7c3aed] hover:underline font-bold">
+            <Link to="/" className="block mt-4 font-mono text-[10px] uppercase tracking-widest text-[#22c55e] hover:underline font-bold">
               View All DAOs →
             </Link>
           </div>
@@ -37,7 +37,7 @@ const ExplorePage: React.FC = () => {
               Track funding proposals, vote tallies, and payout history. Every vote is recorded on-chain with one-vote-per-wallet
               enforcement.
             </p>
-            <Link to="/" className="block mt-4 font-mono text-[10px] uppercase tracking-widest text-[#7c3aed] hover:underline font-bold">
+            <Link to="/" className="block mt-4 font-mono text-[10px] uppercase tracking-widest text-[#22c55e] hover:underline font-bold">
               View Proposals →
             </Link>
           </div>
@@ -49,7 +49,7 @@ const ExplorePage: React.FC = () => {
               Verify executed payouts on-chain. Funds are only released after quorum and approval threshold are met — no admin override
               possible.
             </p>
-            <Link to="/" className="block mt-4 font-mono text-[10px] uppercase tracking-widest text-[#7c3aed] hover:underline font-bold">
+            <Link to="/" className="block mt-4 font-mono text-[10px] uppercase tracking-widest text-[#22c55e] hover:underline font-bold">
               View Payouts →
             </Link>
           </div>
