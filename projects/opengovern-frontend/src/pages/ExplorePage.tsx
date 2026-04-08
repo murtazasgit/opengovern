@@ -8,7 +8,7 @@ const ExplorePage: React.FC = () => {
       <div className="panel-web3 p-6 md:p-12 bg-white relative overflow-hidden group">
         <div className="absolute top-0 right-12 w-8 h-8 border-b-2 border-l-2 border-black bg-[#fbbf24] transform -translate-y-1/2 group-hover:bg-[#8b5cf6] transition-colors"></div>
 
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold uppercase mb-4 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold uppercase mb-4 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
           Explore
         </h2>
         <div className="w-full h-1 bg-black mb-6 opacity-20"></div>

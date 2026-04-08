@@ -215,7 +215,7 @@ const Home: React.FC = () => {
         {/* Decorative notch effect with absolute positioning */}
         <div className="absolute top-0 right-12 w-8 h-8 border-b-2 border-l-2 border-black bg-[#8b5cf6] transform -translate-y-1/2 group-hover:bg-[#fbbf24] transition-colors"></div>
 
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold uppercase mb-6 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold uppercase mb-6 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
           About OpenGovern
         </h2>
         <div className="w-full h-1 bg-black mb-8 opacity-20"></div>
