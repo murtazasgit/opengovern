@@ -415,23 +415,18 @@ class Daocontract(ARC4Contract):
     # ------------------------------------------------------------------
     @arc4.abimethod(allow_actions=["DeleteApplication"])
     def delete_dao(self) -> None:
-        """Fully delete the application and reclaim available treasury funds."""
+        """Fully delete the application and send the remaining ALGO to the creator."""
         assert Txn.sender.bytes == self.creator.value, (
             "Only the creator can delete the DAO"
         )
 
-        # Reclaim available treasury (liquid portion above MBR).
-        # We don't use close_remainder_to here because the presence of boxes
-        # requires the app account to maintain a minimum balance until deletion
-        # is fully processed. The liquid treasury is moved out, and the MBR
-        # portion is cleared along with the app deletion.
-        available_balance = Global.current_application_address.balance - Global.min_balance
-        if available_balance > 0:
-            itxn.Payment(
-                receiver=Txn.sender,
-                amount=available_balance,
-                fee=0,
-            ).submit()
+        # Send all remaining ALGO back to the creator via close_remainder_to
+        itxn.Payment(
+            receiver=Txn.sender,
+            amount=0,
+            close_remainder_to=Txn.sender,
+            fee=0,
+        ).submit()
 
 
 # ---------------------------------------------------------------------------

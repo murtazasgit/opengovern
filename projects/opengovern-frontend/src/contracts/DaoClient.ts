@@ -92,19 +92,6 @@ const ABI_METHODS = {
     args: [],
     returns: { type: 'void' },
   }),
-  deleteProposal: new algosdk.ABIMethod({
-    name: 'delete_proposal',
-    args: [{ type: 'uint64', name: 'proposal_id' }],
-    returns: { type: 'void' },
-  }),
-  deleteVoteRecord: new algosdk.ABIMethod({
-    name: 'delete_vote_record',
-    args: [
-      { type: 'uint64', name: 'proposal_id' },
-      { type: 'account', name: 'voter' },
-    ],
-    returns: { type: 'void' },
-  }),
 }
 
 // ─── Box key prefixes ──────────────────────────────────────────────────────
@@ -466,46 +453,6 @@ export class DaoClient {
       suggestedParams: { ...sp, fee: Math.max(Number(sp.minFee), 2000), flatFee: true },
       onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
       signer: algosdk.makeEmptyTransactionSigner(),
-    })
-
-    return atc.buildGroup().map((t) => t.txn)
-  }
-
-  async buildDeleteProposal(proposalId: bigint): Promise<algosdk.Transaction[]> {
-    const sp = await this.getSuggestedParams()
-    const atc = new algosdk.AtomicTransactionComposer()
-
-    atc.addMethodCall({
-      appID: Number(this.appId),
-      method: ABI_METHODS.deleteProposal,
-      methodArgs: [proposalId],
-      sender: this.sender,
-      suggestedParams: sp,
-      signer: algosdk.makeEmptyTransactionSigner(),
-      boxes: [{ appIndex: Number(this.appId), name: new Uint8Array([...PROPOSAL_BOX_PREFIX, ...encodeUint64(proposalId)]) }],
-    })
-
-    return atc.buildGroup().map((t) => t.txn)
-  }
-
-  async buildDeleteVoteRecord(proposalId: bigint, voter: string): Promise<algosdk.Transaction[]> {
-    const sp = await this.getSuggestedParams()
-    const atc = new algosdk.AtomicTransactionComposer()
-
-    const voteBoxKey = new Uint8Array([
-      0x76, // "v" prefix
-      ...encodeUint64(proposalId),
-      ...algosdk.decodeAddress(voter).publicKey,
-    ])
-
-    atc.addMethodCall({
-      appID: Number(this.appId),
-      method: ABI_METHODS.deleteVoteRecord,
-      methodArgs: [proposalId, voter],
-      sender: this.sender,
-      suggestedParams: sp,
-      signer: algosdk.makeEmptyTransactionSigner(),
-      boxes: [{ appIndex: Number(this.appId), name: voteBoxKey }],
     })
 
     return atc.buildGroup().map((t) => t.txn)

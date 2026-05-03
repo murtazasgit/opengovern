@@ -222,7 +222,7 @@ delete_vote_record:
     //     "Only the creator can manage vote records"
     // )
     assert // Only the creator can manage vote records
-    // smart_contracts/daocontract/contract.py:443
+    // smart_contracts/daocontract/contract.py:438
     // return op.itob(proposal_id) + voter.bytes
     swap
     itob
@@ -982,7 +982,7 @@ vote:
     // # Duplicate vote check via vote-dedup BoxMap
     // vote_key = _vote_box_key(proposal_id, Txn.sender)
     txn Sender
-    // smart_contracts/daocontract/contract.py:443
+    // smart_contracts/daocontract/contract.py:438
     // return op.itob(proposal_id) + voter.bytes
     uncover 2
     itob
@@ -1324,52 +1324,45 @@ delete_dao:
     //     "Only the creator can delete the DAO"
     // )
     assert // Only the creator can delete the DAO
-    // smart_contracts/daocontract/contract.py:423-428
-    // # Reclaim available treasury (liquid portion above MBR).
-    // # We don't use close_remainder_to here because the presence of boxes
-    // # requires the app account to maintain a minimum balance until deletion
-    // # is fully processed. The liquid treasury is moved out, and the MBR
-    // # portion is cleared along with the app deletion.
-    // available_balance = Global.current_application_address.balance - Global.min_balance
-    global CurrentApplicationAddress
-    acct_params_get AcctBalance
-    assert // account funded
-    global MinBalance
-    -
-    dup
-    // smart_contracts/daocontract/contract.py:429
-    // if available_balance > 0:
-    bz delete_dao_after_if_else@4
-    // smart_contracts/daocontract/contract.py:430-434
+    // smart_contracts/daocontract/contract.py:423-429
+    // # Send all remaining ALGO back to the creator via close_remainder_to
     // itxn.Payment(
     //     receiver=Txn.sender,
-    //     amount=available_balance,
+    //     amount=0,
+    //     close_remainder_to=Txn.sender,
     //     fee=0,
     // ).submit()
     itxn_begin
-    // smart_contracts/daocontract/contract.py:431
+    // smart_contracts/daocontract/contract.py:425
     // receiver=Txn.sender,
     txn Sender
-    dig 1
+    // smart_contracts/daocontract/contract.py:427
+    // close_remainder_to=Txn.sender,
+    dup
+    itxn_field CloseRemainderTo
+    // smart_contracts/daocontract/contract.py:426
+    // amount=0,
+    intc_0 // 0
     itxn_field Amount
     itxn_field Receiver
-    // smart_contracts/daocontract/contract.py:430
+    // smart_contracts/daocontract/contract.py:423-424
+    // # Send all remaining ALGO back to the creator via close_remainder_to
     // itxn.Payment(
     intc_1 // pay
     itxn_field TypeEnum
-    // smart_contracts/daocontract/contract.py:433
+    // smart_contracts/daocontract/contract.py:428
     // fee=0,
     intc_0 // 0
     itxn_field Fee
-    // smart_contracts/daocontract/contract.py:430-434
+    // smart_contracts/daocontract/contract.py:423-429
+    // # Send all remaining ALGO back to the creator via close_remainder_to
     // itxn.Payment(
     //     receiver=Txn.sender,
-    //     amount=available_balance,
+    //     amount=0,
+    //     close_remainder_to=Txn.sender,
     //     fee=0,
     // ).submit()
     itxn_submit
-
-delete_dao_after_if_else@4:
     // smart_contracts/daocontract/contract.py:413-416
     // # ------------------------------------------------------------------
     // # 9. delete_dao — creator only

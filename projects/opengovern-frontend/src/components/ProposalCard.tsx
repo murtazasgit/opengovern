@@ -171,7 +171,7 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
                 </button>
                 <button
                   onClick={() => onVote(false)}
-                  className="btn-web3 bg-red-100 text-red-800 hover:bg-red-200 text-xs px-4 py-2 border-red-500 flex-1"
+                  className="btn-web3 bg-red-100 text-red-800 hover:bg-red-200 text-xs px-4 py-2 border-red-500 flex-1 sm:flex-initial"
                   data-test-id="vote-no-btn"
                 >
                   VOTE NO
@@ -179,6 +179,16 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
               </div>
             )}
           </>
+        )}
+
+        {canFinalize && (
+          <button
+            onClick={onFinalize}
+            className="btn-web3 bg-[#fbbf24] text-black hover:bg-[#f59e0b] text-xs px-4 py-2 border-2 border-black animate-pulse w-full sm:w-auto"
+            data-test-id="finalize-btn"
+          >
+            {isAbsoluteMajority ? 'Auto-Execute Now' : 'Finalize & Execute'}
+          </button>
         )}
       </div>
 
